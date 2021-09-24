@@ -1,0 +1,46 @@
+
+CREATE TABLE [dbo].[Departamento]([id] [int] NOT NULL,
+[nome] [varchar](200) NULL,
+PRIMARY KEY CLUSTERED ([id] ASC)WITH (PAD_INDEX = OFF,
+STATISTICS_NORECOMPUTE = OFF,
+IGNORE_DUP_KEY = OFF,
+ALLOW_ROW_LOCKS = ON,
+ALLOW_PAGE_LOCKS = ON,
+OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]GO
+
+CREATE TABLE [dbo].[pessoa]([Id] [int] NOT NULL,
+[Nome] [varchar](200) NULL,
+[Salario] [numeric](10, 2) NULL,
+[DeptId] [int] NULL,
+PRIMARY KEY CLUSTERED ([Id] ASC)WITH (PAD_INDEX = OFF,
+STATISTICS_NORECOMPUTE = OFF,
+IGNORE_DUP_KEY = OFF,
+ALLOW_ROW_LOCKS = ON,
+ALLOW_PAGE_LOCKS = ON,
+OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]GO
+
+ALTER TABLE [dbo].[pessoa] WITH CHECK ADD CONSTRAINT [FK_departamento]
+FOREIGN KEY([DeptId])REFERENCES [dbo].[Departamento] ([id])GO
+ALTER TABLE [dbo].[pessoa] CHECK CONSTRAINT [FK_departamento]GO 
+
+**** DADOS TABELA PESSOA Id,
+    Nome, Salario, DeptId
+  1, Joe, 70000, 1
+  2, Henry, 80000,2
+  3, Sam, 60000, 2
+  4, MAX, 90000, 1
+
+**** DADOS TABELA DEPARTAMENTO 
+id, nome
+1, TI
+2, Vendas
+
+SELECT d.nome Departamento,
+       p.nome Pessoa,
+       p.salario Sal from pessoa p
+
+INNER JOIN departamento d ON (p.deptid = d.id)
+WHERE salario in
+    (SELECT max(salario)
+     FROM pessoa
+     GROUP BY deptid)
